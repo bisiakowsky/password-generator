@@ -1,77 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Password Generetor</title>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <style>
-      body{
-        background-color: #ad9a99;
-        color: #faf2f2;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        font-size: 12px;
-      }
-      header{
-        font-size: 3em;
-        display: flex;
-        justify-content: center;
-      }
-      section{
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-        padding: 5vh 0;
-      }
-      section div{
-        display: flex;
-        justify-content: center;
-        flex-direction: row;
-        padding: .5vh 0;
-      }
-      footer{
-        font-size: 0.8em;
-        display: flex;
-        justify-content: center;
-      }
-    </style>
+  <title>Password Generetor</title>
 
-  <body>
-    <header>
-      Password generator
-    </header>
-    <main>
-      <section>
-        <div>
-            <span>Password length:</span><input type="number" min="6" max="128" value="8"  id="password-length">
-        </div>
-        <div>
-            <span>Inclue numbers:</span><input type="checkbox" name="numbers" id="numbers">
-        </div>
-        <div>
-            <span>Include symbols:</span><input type="checkbox" name="numbers" id="symbol">
-        </div>
-        <div>
-            <span>uppercase:</span><input type="checkbox" name="numbers" id="uppercase">
-        </div>
-        <div>
-            <input type="text" id="resault">
-        </div>
-        <div><button type="submit" id="generate">generate</button></div>
-      </section>
-    </main>
-    <footer>
-      Created by Dominik Bisiakowski
-    </footer>
-    <script  type="text/javascript">
-    const numbers = '1234567890'
+  <style>
+    body {
+      background-color: #ad9a99;
+      color: #faf2f2;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      font-size: 12px;
+    }
+
+    header {
+      font-size: 3em;
+      display: flex;
+      justify-content: center;
+    }
+
+    section {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      padding: 5vh 0;
+    }
+
+    section div {
+      display: flex;
+      justify-content: center;
+      flex-direction: row;
+      padding: .5vh 0;
+    }
+
+    footer {
+      font-size: 0.8em;
+      display: flex;
+      justify-content: center;
+    }
+  </style>
+
+<body>
+  <header>
+    Password generator
+  </header>
+  <main>
+    <section>
+      <div>
+        <span>Password length:</span><input type="number" min="6" max="128" value="8" id="password-length">
+      </div>
+      <div>
+        <span>Inclue numbers:</span><input type="checkbox" name="numbers" id="numbers">
+      </div>
+      <div>
+        <span>Include symbols:</span><input type="checkbox" name="numbers" id="symbol">
+      </div>
+      <div>
+        <span>uppercase:</span><input type="checkbox" name="numbers" id="uppercase">
+      </div>
+      <div>
+        <input type="text" id="resault">
+      </div>
+      <div><button type="submit" id="generate">generate</button></div>
+    </section>
+  </main>
+  <footer>
+    Created by Dominik Bisiakowski
+  </footer>
+  <script type="text/javascript">
+    const numbers = '12345678901234567890'
     const letters = 'qwertyuiopasdfghjklzxcvbnm'
     const symbols = `!@#$%^&*()_+=_~.,/?'";:]}[{\|`
-    const passwordLength = document.getElementById('password-length'); 
+    const passwordLength = document.getElementById('password-length');
     const resaultValue = document.getElementById('resault');
     const generatorButton = document.getElementById('generate');
     const symbolsValue = document.getElementById('symbol');
@@ -80,26 +85,40 @@
 
     function generatePassword() {
       //create all spells map
-      let allSpels = letters
-      if(numbersValue.checked === true){
-        allSpels += numbers;
+      let allSpells = letters
+      if (numbersValue.checked === true) {
+        allSpells += numbers;
       }
-      if(symbolsValue.checked === true){
-        allSpels += symbols;
+      if (symbolsValue.checked === true) {
+        allSpells += symbols;
       }
-      if(UppercaseValue.checked === true){
-        allSpels += letters.toUpperCase();
+      if (UppercaseValue.checked === true) {
+        allSpells += letters.toUpperCase();
       }
-      console.log(allSpels)
-
-      console.log(passwordLength.value)
+      console.log(allSpells)
+      // pushing allSpels to 255 spels
+      do {
+        allSpells += allSpells
+      } while (allSpells.length <= 256);
+      allSpells = allSpells.substring(256, 0);
+      
       // generating array with same length as "Password length"
       const randomizer = new Uint8Array(passwordLength.value);
-    window.crypto.getRandomValues(randomizer)
-    console.log(randomizer)
-   }
+      window.crypto.getRandomValues(randomizer)
+      console.log(randomizer)
+      //changing numbers to spells
+      let password = '';
+      function changeNumToSpells (element) {
+        password += allSpells[element]
+      }
+      randomizer.forEach(changeNumToSpells)
+      //adding password to input
+      resaultValue.value = password;
+    }
+    
 
-    generatorButton.addEventListener("click", generatePassword); 
-    </script>
-  </body>
+    generatorButton.addEventListener("click", generatePassword);
+  </script>
+</body>
+
 </html>
