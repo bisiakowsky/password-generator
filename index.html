@@ -73,7 +73,7 @@
     Created by Dominik Bisiakowski
   </footer>
   <script type="text/javascript">
-    const numbers = '12345678901234567890'
+    const numbers = '1234567890'
     const letters = 'qwertyuiopasdfghjklzxcvbnm'
     const symbols = `!@#$%^&*()_+=_~.,/?'";:]}[{\|`
     const passwordLength = document.getElementById('password-length');
@@ -95,27 +95,70 @@
       if (UppercaseValue.checked === true) {
         allSpells += letters.toUpperCase();
       }
-      console.log(allSpells)
       // pushing allSpels to 255 spels
       do {
         allSpells += allSpells
       } while (allSpells.length <= 256);
       allSpells = allSpells.substring(256, 0);
-      
+
       // generating array with same length as "Password length"
       const randomizer = new Uint8Array(passwordLength.value);
       window.crypto.getRandomValues(randomizer)
-      console.log(randomizer)
       //changing numbers to spells
       let password = '';
-      function changeNumToSpells (element) {
+
+      function changeNumToSpells(element) {
         password += allSpells[element]
       }
       randomizer.forEach(changeNumToSpells)
       //adding password to input
       resaultValue.value = password;
+
+
+
+      //  check small a to z
+      const lettersCheck = new RegExp(/[a-z]+/g);
+      if (lettersCheck.test(password) === false) {
+        generatePassword()
+      }
+
+
+      //  check 0 to 9
+
+      if (numbersValue.checked === true) {
+        const numbersCheck = new RegExp(/[0-9]/g);
+        if (numbersCheck.test(password) === false) {
+          generatePassword()
+        }
+      }
+
+
+
+
+
+
+
+      //  check big A to Z
+
+      if (UppercaseValue.checked === true) {
+        const uppercaseCheck = new RegExp(/[A-Z]/g);
+        if (uppercaseCheck.test(password) === false) {
+          generatePassword()
+        }
+      }
+
+
+      //  check spells
+
+      if (symbolsValue.checked === true) {
+        const spellsCheck = new RegExp(/[!@#$%^&*()_+=_~.,/?'";:{}\\\[\]|]/g);
+        if (spellsCheck.test(password) === false) {
+          generatePassword()
+        }
+      }
+
     }
-    
+
 
     generatorButton.addEventListener("click", generatePassword);
   </script>
